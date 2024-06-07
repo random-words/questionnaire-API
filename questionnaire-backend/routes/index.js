@@ -2,34 +2,46 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controllers");
 
-function verify(req, res, next) {
-  // Вроді є якийсь метод у mongoose'а, який дозволяє перевірити,
-  // чи правильно введений пароль або якісь дані - його і використати
-  const isValid = userController.checkData(data);
+async function verify(req, res, next) {
+  const userData = req.body;
+  const isValid = await userController.validateData(userData);
   if (isValid) {
     next();
     return;
   }
-  res.render("error", {
-    message: "Entered Incorrect Data",
-    error: { status: 401, stack: "Not Found" },
+  res.json({
+    status: "Error",
+    code: 400,
+    message: "Data Entered Incorrectly",
   });
 }
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
-  res.render("index", { title: "Express" });
+  res.render("index", { title: "Hello" });
 });
 
 // register page
-router.get("/register", (req, res) => {});
+router.get("/register", (req, res) => {
+  res.render("register");
+});
+
+// after register, redirect user to user's page
+router.post("/register", (req, res) => {
+  const { username, email, password } = req.body;
+  userController.create({ firstName, lastName, username, email, password });
+  res.render("userPage", { username });
+});
+
+router.get("/login", (req, res) => {
+  res.render("login");
+});
 
 // login page (must lead to user's page & need middleware, that must verify data from user)
-
-// є два варіанти, як це можна зробити: або перед основной функцією перевіряти,
-// і, якщо не корректні дані - то вибити еррор(грубо кажучи) (якщо правильно - продовжити роботу і перейти на наступну функцію)
-
-// другий варіант - вбити у колбек-функцію цей verify і там провірити (якщо да - то вивести дані, ні - вибити помилку)
-router.get("/login", verify, (req, res) => {});
+router.post("/login", verify, (req, res) => {
+  const { email } = req.body;
+  const user = userController.findByEmail(email);
+  res.render("userPage", { username: user.username });
+});
 
 module.exports = router;
