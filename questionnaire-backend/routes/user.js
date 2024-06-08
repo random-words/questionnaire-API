@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
-// const questionnaire = require(".questionnaire");
+
+/**
+ * тут точно має бути роут для апдейта даних юзера, видалення юзера(?)
+ */
 
 /* GET users listing. */
 router.get("/", function (req, res, next) {

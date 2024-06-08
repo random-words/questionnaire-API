@@ -2,9 +2,10 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controllers");
 
-async function verify(req, res, next) {
+// якщо будуть помилки, то додати async/await
+function verify(req, res, next) {
   const userData = req.body;
-  const isValid = await userController.validateData(userData);
+  const isValid = userController.validate(userData);
   if (isValid) {
     next();
     return;
@@ -15,6 +16,7 @@ async function verify(req, res, next) {
     message: "Data Entered Incorrectly",
   });
 }
+// якщо будуть помилки, то додати async/await
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
@@ -27,11 +29,7 @@ router.get("/register", (req, res) => {
 });
 
 // after register, redirect user to user's page
-router.post("/register", (req, res) => {
-  const { username, email, password } = req.body;
-  userController.create({ firstName, lastName, username, email, password });
-  res.render("userPage", { username });
-});
+router.post("/register", userController.create);
 
 router.get("/login", (req, res) => {
   res.render("login");
