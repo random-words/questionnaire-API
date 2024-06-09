@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const questionnaire = new Schema(
+const form = new Schema(
   {
     firstName: {
       type: String,
@@ -11,7 +11,10 @@ const questionnaire = new Schema(
       type: String,
       required: true,
     },
-    username: String,
+    username: {
+      type: String,
+      required: true,
+    },
     likes: {
       type: Number,
       default: 0,
@@ -23,6 +26,6 @@ const questionnaire = new Schema(
   }
 );
 
-const Questionnaire = mongoose.model("Questionnaire", questionnaire);
+const Form = mongoose.model("Form", form);
 
-module.exports = Questionnaire;
+module.exports = Form;

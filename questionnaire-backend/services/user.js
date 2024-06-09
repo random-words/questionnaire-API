@@ -1,36 +1,42 @@
-const User = require("./schemas/user");
+const { User } = require("./schemas");
 
-function create(data) {
-  return User.create(data);
+function findAll() {
+  return User.find();
 }
 
 function findById(id) {
   return User.findById(id);
 }
 
-function findByEmail(email) {
-  return User.findOne({ email });
+// function findByEmail(email) {
+//   return User.findOne({ email });
+// }
+
+function create(data) {
+  return User.create(data);
 }
 
 // кіть шось неправильно, винити цю функцію,
 // бо я шось хз як правильно деструктуризацію зробити...
-function findByCondition(condition) {
+// Вроооді зробив?
+function findByCondition(condition = {}) {
   return User.findOne(condition);
 }
 
-function updateByEmail(email, data) {
-  return User.findOneAndUpdate({ email }, data, { new: true });
+function updateById(id, data) {
+  return User.findOneAndUpdate({ _id: id }, data, { new: true });
 }
 
-function deleteByUsername(username) {
-  return User.findOneAndDelete({ username });
+function deleteById(id) {
+  return User.findOneAndDelete({ _id: id });
 }
 
 module.exports = {
+  findAll,
   create,
   findById,
   findByEmail,
   findByCondition,
-  updateByEmail,
-  deleteByUsername,
+  updateById,
+  deleteById,
 };

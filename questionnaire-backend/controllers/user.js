@@ -1,9 +1,26 @@
-const userService = require("../services/user");
+const { userService } = require("../services");
+
+async function findAll(req, res, next) {
+  try {
+    const users = await userService.findAll();
+    res.json({
+      status: "success",
+      code: 200,
+      data: {
+        users,
+      },
+    });
+    return users;
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+}
 
 async function findById(req, res, next) {
   const { id } = req.params;
   try {
-    const user = userService.findById(id);
+    const user = await userService.findById(id);
     if (user) {
       res.json({
         status: "success",
@@ -13,7 +30,7 @@ async function findById(req, res, next) {
           user,
         },
       });
-      return;
+      return user;
     }
     res.status(404).json({
       status: "Error",
@@ -27,29 +44,62 @@ async function findById(req, res, next) {
   }
 }
 
-async function findByEmail(req, res, next) {
-  const { email } = req.body;
+// async function findByEmail(req, res, next) {
+//   const { email } = req.body;
+//   try {
+//     const user = await userService.findByEmail(email);
+//     if (user) {
+//       res.json({
+//         status: "success",
+//         code: 200,
+//         message: "User Found",
+//         data: {
+//           user,
+//         },
+//       });
+//       return user;
+//     }
+//     res.status(404).json({
+//       status: "Error",
+//       code: 404,
+//       message: "User Not Found",
+//       data: "Not Found",
+//     });
+//   } catch (e) {
+//     console.err(e);
+//     next(e);
+//   }
+// }
+
+async function findByCondition(req, res, next) {
+  const { conditionName, conditionValue } = req.body;
   try {
-    const user = userService.findByEmail(email);
+    const user = await userService.findByCondition({
+      conditionName: conditionValue,
+    });
     if (user) {
+      res.json({
+        status: "success",
+        code: 200,
+        message: "User Found",
+        data: {
+          user,
+        },
+      });
       return user;
     }
-    res.status(404).json({
-      status: "Error",
-      code: 404,
-      message: "User Not Found",
-      data: "Not Found",
-    });
   } catch (e) {
-    console.err(e);
+    console.error(e);
     next(e);
   }
 }
 
 async function validate(userData) {
   try {
-    const email = await userService.findByEmail(userData.email);
-    const password = await userService.findByCondition(userData.password);
+    const email = await userService.findByCondition({ email: userData.email });
+    const password = await userService.findByCondition({
+      password: userData.password,
+    });
 
     if (email && password) {
       return true;
@@ -63,14 +113,21 @@ async function validate(userData) {
 async function create(req, res, next) {
   const { firstName, lastName, username, email, password } = req.body;
   try {
-    await userService.create({
+    const user = await userService.create({
       firstName,
       lastName,
       username,
       email,
       password,
     });
-    res.render("userPage", { username });
+    res.json({
+      status: "success",
+      code: 201,
+      message: "User Created",
+      data: {
+        user,
+      },
+    });
   } catch (e) {
     console.error(e);
     next(e);
@@ -78,11 +135,12 @@ async function create(req, res, next) {
 }
 
 async function update(req, res, next) {
-  const { email, data } = req.body;
+  const { id } = req.params;
+  const { data } = req.body;
   try {
-    const user = userService.findByEmail(email);
+    const user = await userService.findById(id);
     if (user) {
-      const updatedUser = userService.updateByEmail(email, data);
+      const updatedUser = await userService.updateById(id, data);
       res.json({
         status: "success",
         code: 200,
@@ -91,7 +149,7 @@ async function update(req, res, next) {
           updatedUser,
         },
       });
-      return;
+      return updatedUser;
     }
     res.status(404).json({
       status: "Error",
@@ -106,22 +164,43 @@ async function update(req, res, next) {
 }
 
 async function deleteUser(req, res, next) {
-  const { username } = req.body;
+  const { id } = req.params;
   try {
     // короче тут буде передаватися об'єкт, властивість якого - username,
     // яка тоже є в схемі, тому всьо пройде, але бажано
     // перенести таку деструктуризацію в сервіси
-    const user = userService.findByCondition({ username });
+    const user = await userService.findById(id);
     if (user) {
-      const deletedUser = userService.deleteByUsername(username);
+      const deletedUser = await userService.deleteById(id);
       res.json({
         status: "success",
         code: 200,
-        message: "User Deleted Successfully",
+        message: "User Deleted",
         data: {
           deletedUser,
         },
       });
+      return;
     }
-  } catch (e) {}
+    res.status(404).json({
+      status: "Error",
+      code: 404,
+      message: "User Not Found",
+      data: "Not Found",
+    });
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
 }
+
+module.exports = {
+  findAll,
+  findById,
+  // findByEmail,
+  findByCondition,
+  validate,
+  create,
+  update,
+  deleteUser,
+};

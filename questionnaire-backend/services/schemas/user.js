@@ -38,9 +38,6 @@ const user = new Schema(
   }
 );
 
-// ВОТ як можна прописати валідацію даних, як надходять!! (можливо, перенести в контроллери)
-user.methods.validateData = function (data) {};
-
 const User = mongoose.model("User", user);
 
 module.exports = User;

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const userController = require("../controllers");
+const { userController } = require("../controllers");
 
 // якщо будуть помилки, то додати async/await
 function verify(req, res, next) {
@@ -19,7 +19,7 @@ function verify(req, res, next) {
 // якщо будуть помилки, то додати async/await
 
 /* GET home page. */
-router.get("/", function (req, res, next) {
+router.get("/", (req, res, next) => {
   res.render("index", { title: "Hello" });
 });
 
@@ -29,16 +29,20 @@ router.get("/register", (req, res) => {
 });
 
 // after register, redirect user to user's page
-router.post("/register", userController.create);
+router.post("/register", userController.create, (req, res) => {
+  const { username } = req.body;
+  res.render("userPage", { username });
+});
 
+// login page
 router.get("/login", (req, res) => {
   res.render("login");
 });
 
-// login page (must lead to user's page & need middleware, that must verify data from user)
+// after login, redirect to user's page
 router.post("/login", verify, (req, res) => {
   const { email } = req.body;
-  const user = userController.findByEmail(email);
+  const user = userController.findByCondition(email);
   res.render("userPage", { username: user.username });
 });
 
