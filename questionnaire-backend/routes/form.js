@@ -6,7 +6,9 @@ const { formController } = require("../controllers");
 router.get("/", formController.findAll);
 
 // get user's form by ID
-router.get("/:id", formController.findFormById);
+router.get("/:id", formController.findById);
+
+router.get("/", formController.findByCondition);
 
 // create a user's form
 router.post("/", formController.create);
@@ -16,3 +18,5 @@ router.put("/:id", formController.update);
 
 // delete form by ID
 router.delete("/:id", formController.deleteForm);
+
+module.exports = router;

@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const { userController } = require("../controllers");
-const { formRouter } = require("./form");
+const formRouter = require("./form");
+const usersForms = require("./usersForms");
+// якщо не буде робити, поставити назад деструктуризацію
 
 // main user page
 router.get("/", (req, res) => {
@@ -27,5 +29,8 @@ router.delete("/:id", userController.deleteUser);
 
 // form route with all form's logic
 router.use("/form", formRouter);
+
+// other users forms route
+router.use("/users-forms", usersForms);
 
 module.exports = router;

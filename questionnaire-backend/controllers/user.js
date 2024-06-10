@@ -35,7 +35,7 @@ async function findById(req, res, next) {
     res.status(404).json({
       status: "Error",
       code: 404,
-      message: "User Not Found",
+      message: `User With ID ${id} Not Found`,
       data: "Not Found",
     });
   } catch (e) {
@@ -88,6 +88,12 @@ async function findByCondition(req, res, next) {
       });
       return user;
     }
+    res.status(404).json({
+      status: "Error",
+      code: 404,
+      message: `User With ID ${id} Not Found`,
+      data: "Not Found",
+    });
   } catch (e) {
     console.error(e);
     next(e);
@@ -111,15 +117,9 @@ async function validate(userData) {
 }
 
 async function create(req, res, next) {
-  const { firstName, lastName, username, email, password } = req.body;
+  const data = req.body;
   try {
-    const user = await userService.create({
-      firstName,
-      lastName,
-      username,
-      email,
-      password,
-    });
+    const user = await userService.create(data);
     res.json({
       status: "success",
       code: 201,
@@ -154,7 +154,7 @@ async function update(req, res, next) {
     res.status(404).json({
       status: "Error",
       code: 404,
-      message: "User Not Found",
+      message: `User With ID ${id} Not Found`,
       data: "Not Found",
     });
   } catch (e) {
@@ -185,7 +185,7 @@ async function deleteUser(req, res, next) {
     res.status(404).json({
       status: "Error",
       code: 404,
-      message: "User Not Found",
+      message: `User With ID ${id} Not Found`,
       data: "Not Found",
     });
   } catch (e) {
