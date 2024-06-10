@@ -35,7 +35,7 @@ module.exports = {
   findAll,
   create,
   findById,
-  findByEmail,
+  // findByEmail,
   findByCondition,
   updateById,
   deleteById,
