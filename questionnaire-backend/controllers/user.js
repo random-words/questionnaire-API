@@ -44,39 +44,10 @@ async function findById(req, res, next) {
   }
 }
 
-// async function findByEmail(req, res, next) {
-//   const { email } = req.body;
-//   try {
-//     const user = await userService.findByEmail(email);
-//     if (user) {
-//       res.json({
-//         status: "success",
-//         code: 200,
-//         message: "User Found",
-//         data: {
-//           user,
-//         },
-//       });
-//       return user;
-//     }
-//     res.status(404).json({
-//       status: "Error",
-//       code: 404,
-//       message: "User Not Found",
-//       data: "Not Found",
-//     });
-//   } catch (e) {
-//     console.err(e);
-//     next(e);
-//   }
-// }
-
-async function findByCondition(req, res, next) {
-  const { conditionName, conditionValue } = req.body;
+async function findByEmail(req, res, next) {
+  const { email } = req.body;
   try {
-    const user = await userService.findByCondition({
-      conditionName: conditionValue,
-    });
+    const user = await userService.findByEmail(email);
     if (user) {
       res.json({
         status: "success",
@@ -91,12 +62,24 @@ async function findByCondition(req, res, next) {
     res.status(404).json({
       status: "Error",
       code: 404,
-      message: `User With ID ${id} Not Found`,
+      message: "User Not Found",
       data: "Not Found",
     });
   } catch (e) {
-    console.error(e);
+    console.err(e);
     next(e);
+  }
+}
+
+async function findByCondition(condition) {
+  try {
+    const user = await userService.findByCondition(condition);
+    if (user) {
+      return user;
+    }
+    return null;
+  } catch (e) {
+    console.error(e);
   }
 }
 
@@ -128,6 +111,7 @@ async function create(req, res, next) {
         user,
       },
     });
+    return user;
   } catch (e) {
     console.error(e);
     next(e);
@@ -136,7 +120,7 @@ async function create(req, res, next) {
 
 async function update(req, res, next) {
   const { id } = req.params;
-  const { data } = req.body;
+  const data = req.body;
   try {
     const user = await userService.findById(id);
     if (user) {
@@ -166,9 +150,6 @@ async function update(req, res, next) {
 async function deleteUser(req, res, next) {
   const { id } = req.params;
   try {
-    // короче тут буде передаватися об'єкт, властивість якого - username,
-    // яка тоже є в схемі, тому всьо пройде, але бажано
-    // перенести таку деструктуризацію в сервіси
     const user = await userService.findById(id);
     if (user) {
       const deletedUser = await userService.deleteById(id);
@@ -197,7 +178,7 @@ async function deleteUser(req, res, next) {
 module.exports = {
   findAll,
   findById,
-  // findByEmail,
+  findByEmail,
   findByCondition,
   validate,
   create,

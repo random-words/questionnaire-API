@@ -15,9 +15,19 @@ const form = new Schema(
       type: String,
       required: true,
     },
+    image: {
+      type: String,
+      required: false,
+    },
     likes: {
       type: Number,
       default: 0,
+    },
+    // (дочірній елемент)
+    // робим референс на юзера, з таким-то айдішником
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
     },
   },
   {

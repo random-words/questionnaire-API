@@ -8,6 +8,8 @@ router.get("/", (req, res) => {
   res.render("userPage");
 });
 
+// router.post("/", userController.create);
+
 // show all users to a user
 router.get("/users", userController.findAll);
 
@@ -17,7 +19,7 @@ router.get("/users/:id", userController.findById);
 // if data on page is entered, find users,
 // that are suitable for condition
 // окей, тут проблеми із цим методом...
-router.post("/users", userController.findByCondition);
+// router.post("/users", userController.findByCondition);
 
 // update user's data
 router.put("/:id", userController.update);

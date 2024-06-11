@@ -1,26 +1,28 @@
 const { Form } = require("./schemas");
 
-function findAll() {
-  return Form.find();
+async function findAll() {
+  return Form.find().populate("User");
 }
 
-function findById(id) {
-  return Form.findById(id);
+async function findById(id) {
+  // використовуєм populate, шоби передати в уже створене поле
+  // об'єкт юзера, на який посилається анкета
+  return Form.findById(id).populate("User");
 }
 
-function findByCondition(condition = {}) {
-  return Form.findOne(condition);
+async function findByCondition(condition = {}) {
+  return Form.findOne(condition).populate("User");
 }
 
-function create(data) {
-  return Form.create(data);
+async function create(data) {
+  return Form.create(data).populate("User");
 }
 
-function update(id, data) {
+async function update(id, data) {
   return Form.findByIdAndUpdate(id, data, { new: true });
 }
 
-function deleteForm(id) {
+async function deleteForm(id) {
   return Form.findByIdAndDelete(id);
 }
 

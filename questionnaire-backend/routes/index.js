@@ -3,9 +3,9 @@ const router = express.Router();
 const { userController } = require("../controllers");
 
 // якщо будуть помилки, то додати async/await
-function verify(req, res, next) {
+async function verify(req, res, next) {
   const userData = req.body;
-  const isValid = userController.validate(userData);
+  const isValid = await userController.validate(userData);
   if (isValid) {
     next();
     return;
@@ -40,9 +40,9 @@ router.get("/login", (req, res) => {
 });
 
 // after login, redirect to user's page
-router.post("/login", verify, (req, res) => {
+router.post("/login", verify, async (req, res, next) => {
   const { email } = req.body;
-  const user = userController.findByCondition(email);
+  const user = await userController.findByCondition({ email });
   res.render("userPage", { username: user.username });
 });
 
