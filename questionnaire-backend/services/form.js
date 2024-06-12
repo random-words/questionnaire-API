@@ -1,21 +1,23 @@
 const { Form } = require("./schemas");
 
 async function findAll() {
-  return Form.find().populate("User");
+  return Form.find().populate("user");
 }
 
 async function findById(id) {
   // використовуєм populate, шоби передати в уже створене поле
   // об'єкт юзера, на який посилається анкета
+  // (В ПОЛЕ, В ППППООООЛЛЛЕЕЕЕ user, ЯКЕ МИ СТВОРИЛИ У СХЕМІ ФОРМИ)
+  // (тоді, ЛОГІЧНО, шо писати не СХЕМУ юзера, а ПОЛЕ, яке у схемі форми...)
   return Form.findById(id).populate("User");
 }
 
 async function findByCondition(condition = {}) {
-  return Form.findOne(condition).populate("User");
+  return Form.findOne(condition).populate("user");
 }
 
 async function create(data) {
-  return Form.create(data).populate("User");
+  return await Form.create(data);
 }
 
 async function update(id, data) {

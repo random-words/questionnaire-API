@@ -3,12 +3,6 @@ const Schema = mongoose.Schema;
 
 const user = new Schema(
   {
-    // (батьківський елемент)
-    // створюєм айдішник юзеру(для передачі його в анкету,
-    // шоб вона посилалася на цього юзера)
-    // _id: {
-    //   type: Schema.Types.ObjectId,
-    // },
     username: {
       type: String,
       minlength: 3,
