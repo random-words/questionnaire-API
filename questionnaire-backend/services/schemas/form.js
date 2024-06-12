@@ -26,20 +26,21 @@ const form = new Schema(
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",
+      required: true,
     },
   },
   {
     versionKey: false,
     timestamps: true,
-    toJSON: { virtuals: true },
+    // toJSON: { virtuals: true },
   }
 );
 
-form.virtual("User", {
-  ref: "User",
-  localField: "_id",
-  foreignField: "_id",
-});
+// form.virtual("User", {
+//   ref: "User",
+//   localField: "id",
+//   foreignField: "id",
+// });
 
 const Form = mongoose.model("Form", form);
 

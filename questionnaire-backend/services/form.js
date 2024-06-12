@@ -9,7 +9,7 @@ async function findById(id) {
   // об'єкт юзера, на який посилається анкета
   // (В ПОЛЕ, В ППППООООЛЛЛЕЕЕЕ user, ЯКЕ МИ СТВОРИЛИ У СХЕМІ ФОРМИ)
   // (тоді, ЛОГІЧНО, шо писати не СХЕМУ юзера, а ПОЛЕ, яке у схемі форми...)
-  return Form.findById(id).populate("User");
+  return Form.findById(id).populate("user").exec();
 }
 
 async function findByCondition(condition = {}) {
