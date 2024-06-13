@@ -1,7 +1,7 @@
 const { Form } = require("./schemas");
 
 async function findAll() {
-  return Form.find().populate("user");
+  return Form.find().populate("user", ["username", "firstName", "lastName"]);
 }
 
 async function findById(id) {
@@ -9,15 +9,23 @@ async function findById(id) {
   // об'єкт юзера, на який посилається анкета
   // (В ПОЛЕ, В ППППООООЛЛЛЕЕЕЕ user, ЯКЕ МИ СТВОРИЛИ У СХЕМІ ФОРМИ)
   // (тоді, ЛОГІЧНО, шо писати не СХЕМУ юзера, а ПОЛЕ, яке у схемі форми...)
-  return Form.findById(id).populate("user").exec();
+  return Form.findById(id).populate("user", [
+    "username",
+    "firstName",
+    "lastName",
+  ]);
 }
 
 async function findByCondition(condition = {}) {
-  return Form.findOne(condition).populate("user");
+  return Form.findOne(condition).populate("user", [
+    "username",
+    "firstName",
+    "lastName",
+  ]);
 }
 
 async function create(data) {
-  return await Form.create(data);
+  return Form.create(data);
 }
 
 async function update(id, data) {

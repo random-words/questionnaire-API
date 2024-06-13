@@ -8,7 +8,8 @@ router.get("/", formController.findAll);
 // get user's form by ID
 router.get("/:id", formController.findById);
 
-router.get("/", formController.findByCondition);
+// how the fuck use that?..
+// router.post("/", formController.findByCondition);
 
 // create a user's form
 router.post("/", formController.create);

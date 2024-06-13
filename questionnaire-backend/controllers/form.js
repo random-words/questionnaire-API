@@ -44,10 +44,11 @@ async function findById(req, res, next) {
   }
 }
 
+// don't know how to do it...
 async function findByCondition(req, res, next) {
-  const { condition } = req.body;
+  const condition = req.query;
   try {
-    const form = await formService.findByCondition({ condition });
+    const form = await formService.findByCondition(condition);
     if (form) {
       res.json({
         status: "success",
@@ -59,10 +60,11 @@ async function findByCondition(req, res, next) {
       });
       return form;
     }
+    const keys = Object.keys(condition);
     res.status(404).json({
       status: "Error",
       code: 404,
-      message: `Form with condition ${condition} not found`,
+      message: `Form with condition '${keys[0]}' not found`,
       data: "Not Found",
     });
   } catch (e) {
@@ -92,7 +94,7 @@ async function create(req, res, next) {
 
 async function update(req, res, next) {
   const { id } = req.params;
-  const { data } = req.body;
+  const data = req.body;
   try {
     const form = await formService.findById(id);
     if (form) {
