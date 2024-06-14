@@ -1,8 +1,9 @@
 const { userService } = require("../services");
 
 async function findAll(req, res, next) {
+  const { limit, skip } = req.query;
   try {
-    const users = await userService.findAll();
+    const users = await userService.findAll({ limit, skip });
     res.json({
       status: "success",
       code: 200,

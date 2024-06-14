@@ -1,7 +1,7 @@
 const { User } = require("./schemas");
 
-async function findAll() {
-  return User.find();
+async function findAll(options) {
+  return User.find().limit(options.limit).skip(options.skip);
 }
 
 async function findById(id) {
